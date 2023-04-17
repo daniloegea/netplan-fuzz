@@ -3,6 +3,8 @@ import writeYamlFile from 'write-yaml-file';
 import { JSONSchemaFaker } from "json-schema-faker";
 import { faker } from '@faker-js/faker';
 
+import * as fs from 'node:fs';
+
 JSONSchemaFaker.extend('faker', () => {
     faker.ipv4 = {
         withprefix: _ => {
@@ -14,8 +16,26 @@ JSONSchemaFaker.extend('faker', () => {
             return faker.internet.ipv6() + '/64';
         }
     }
+    faker.ipv4_or_ipv6 = {
+        withprefix: _ => {
+            if (Math.random() % 2 == 0) {
+                return faker.internet.ipv6() + '/64';
+            } else {
+                return faker.internet.ipv4() + '/24';
+            }
+        },
+        withoutprefix: _ => {
+            if (Math.random() % 2 == 0) {
+                return faker.internet.ipv6();
+            } else {
+                return faker.internet.ipv4();
+            }
+        }
+    }
     return faker;
 });
+
+const ipv4_or_ipv6 = faker.internet.ipv4();
 
 const schema = {
     type: "object",
@@ -24,6 +44,7 @@ const schema = {
         network: {
             type: "object",
             additionalProperties: false,
+            required: ["ethernets"],
             properties: {
                 renderer: {
                     type: "string",
@@ -43,7 +64,7 @@ const schema = {
                         },
                     },
                     patternProperties: {
-                        ".*$": {
+                        "[azAZ09-]{0,18}": {
                             additionalProperties: false,
                             properties: {
                                 match: {
@@ -52,9 +73,11 @@ const schema = {
                                     properties: {
                                         name: {
                                             type: "string",
+                                            faker: "lorem.word"
                                         },
                                         driver: {
-                                            type: "string"
+                                            type: "string",
+                                            faker: "lorem.word"
                                         },
                                         macaddress: {
                                             type: "string",
@@ -75,89 +98,169 @@ const schema = {
                                         anyOf: [
                                             {
                                                 type: "string",
-                                                faker: "ipv4.withprefix",
-                                                format: "ipv4"
+                                                faker: "ipv4_or_ipv6.withprefix",
                                             },
                                             {
-                                                type: "string",
-                                                faker: "ipv6.withprefix",
-                                                format: "ipv6"
-                                            }
-                                        ]
-                                    }
-                                }
-                            },
-                            nameservers: {
-                                type: "object",
-                                additionalProperties: false,
-                                properties: {
-                                    search: {
-                                        type: "array",
-                                        items: {
-                                            type: "string",
-                                            faker: "internet.domainName",
-                                        }
-                                    },
-                                    addresses: {
-                                        type: "array",
-                                        items: {
-                                            anyOf: [
-                                                {
-                                                    anyOf: [
-                                                        {
-                                                            type: "string",
-                                                            faker: "internet.ipv4",
-                                                            format: "ipv4"
-                                                        },
-                                                        {
-                                                            type: "string",
-                                                            faker: "internet.ipv6",
-                                                            format: "ipv6"
-                                                        }
-                                                    ]
-                                                },
-                                                {
-                                                    type: "object",
-                                                    patternProperties: {
-                                                        ".*$": {
-                                                            format: "ipv4",
-                                                            faker: "internet.ipv4",
-                                                            type: "object",
-                                                            additionalProperties: false,
-                                                            properties: {
-                                                                lifetime: {
-                                                                    type: "string",
-                                                                    enum: ["forever", "0"]
-                                                                },
-                                                                label: {
-                                                                    type: "string",
-                                                                    maxLength: 15,
-                                                                }
+                                                type: "object",
+                                                patternProperties: {
+                                                    "192\\.168\\.[1-9]{2}\\.0/24": {
+                                                        type: "object",
+                                                        additionalProperties: false,
+                                                        properties: {
+                                                            lifetime: {
+                                                                type: "string",
+                                                                enum: ["forever", 0]
+                                                            },
+                                                            label: {
+                                                                type: "string",
+                                                                maxLength: 15,
                                                             }
                                                         }
                                                     }
                                                 }
-                                            ]
+                                            }
+                                        ]
+                                    }
+                                },
+                                nameservers: {
+                                    type: "object",
+                                    additionalProperties: false,
+                                    properties: {
+                                        search: {
+                                            type: "array",
+                                            items: {
+                                                type: "string",
+                                                faker: "internet.domainName",
+                                            }
+                                        },
+                                        addresses: {
+                                            type: "array",
+                                            items: {
+
+                                                anyOf: [
+                                                    {
+                                                        type: "string",
+                                                        faker: "internet.ipv4",
+                                                        format: "ipv4"
+                                                    },
+                                                    {
+                                                        type: "string",
+                                                        faker: "internet.ipv6",
+                                                        format: "ipv6"
+                                                    }
+
+                                                ]
+                                            }
+                                        }
+                                    }
+                                },
+                                routes: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                            from: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            to: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            via: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withoutprefix"
+                                            },
+                                            "on-link": {
+                                                type: "boolean"
+                                            },
+                                            metric: {
+                                                type: "integer",
+                                                minimum: -100,
+                                            },
+                                            type: {
+                                                type: "string",
+                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve", "aadas*&%"]
+                                            },
+                                            scope: {
+                                                type: "string",
+                                                enum: ["global", "link", "host", "adasd*&%&"]
+                                            },
+                                            table: {
+                                                type: "integer",
+                                                minimum: -100
+                                            },
+                                            mtu: {
+                                                type: "integer",
+                                                minimum: -100
+                                            },
+                                            "congestion-window": {
+                                                type: "integer",
+                                                minimum: -100
+                                            },
+                                            "advertised-receive-window": {
+                                                type: "integer",
+                                                minimum: -100
+                                            }
+
+                                        },
+                                        required: ["to"]
+                                    }
+                                },
+                                "routing-policy": {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                            from: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            to: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            table: {
+                                                type: "integer",
+                                                minimum: -100
+                                            },
+                                            priority: {
+                                                type: "integer",
+                                                minimum: -10
+                                            },
+                                            mark: {
+                                                type: "integer",
+                                                minimum: -10
+                                            },
+                                            "type-of-service": {
+                                                type: "integer",
+                                                minimum: -10,
+                                                maximum: 300
+                                            }
                                         }
                                     }
                                 }
+
                             }
                         }
-                    }
-                }
+                    },
+                },
             },
-        },
-    },
-    required: ["network"],
-    definitions: {
-        positiveInt: {
-            type: "integer",
-            minimum: 0,
-            exclusiveMinimum: true,
-        },
-    },
-};
+            required: ["network"],
+            definitions: {
+                positiveInt: {
+                    type: "integer",
+                    minimum: 0,
+                    exclusiveMinimum: true,
+                },
+            },
+        }
 
+    }
+}
+fs.mkdirSync("fakeroot/etc/netplan", { recursive: true });
 
 const value = jsf.generate(schema);
 writeYamlFile('fakeroot/etc/netplan/foo.yaml', value);
