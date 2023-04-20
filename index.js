@@ -8,6 +8,8 @@ import * as fs from 'node:fs';
 import ethernets_schema from './ethernets.js';
 import wifis_schema from './wifis.js';
 import vrfs_schema from './vrfs.js';
+import vlans_schema from './vlans.js';
+import bridges_schema from './bridges.js';
 
 JSONSchemaFaker.extend('faker', () => {
     faker.ipv4 = {
@@ -50,3 +52,9 @@ writeYamlFile('fakeroot/etc/netplan/wifis.yaml', wifis);
 
 const vrfs = jsf.generate(vrfs_schema);
 writeYamlFile('fakeroot/etc/netplan/vrfs.yaml', vrfs);
+
+const vlans = jsf.generate(vlans_schema);
+writeYamlFile('fakeroot/etc/netplan/vlans.yaml', vlans);
+
+const bridges = jsf.generate(bridges_schema);
+writeYamlFile('fakeroot/etc/netplan/bridges.yaml', bridges);
