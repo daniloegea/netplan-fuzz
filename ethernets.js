@@ -48,9 +48,11 @@ const ethernets_schema = {
                                         }
                                     },
                                 },
+                                /*
                                 "set-name": {
                                     type: "string"
                                 },
+                                */
                                 optional: {
                                     type: "boolean"
                                 },
@@ -104,10 +106,7 @@ const ethernets_schema = {
                                     type: "boolean"
                                 },
                             },
-                            "required": ["match", "set-name"],
-                            dependencies: {
-                                "set-name": ["match"]
-                            }
+                            "required": ["match", "set-name"]
                         }
                     },
                     required: ["[azAZ09-]{1,15}"]

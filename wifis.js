@@ -49,9 +49,11 @@ const wifis_schema = {
                                         }
                                     },
                                 },
+                                /*
                                 "set-name": {
                                     type: "string",
                                 },
+                                */
                                 optional: {
                                     type: "boolean"
                                 },
@@ -178,10 +180,7 @@ const wifis_schema = {
                                     "required": ["[azAZ09 ]+"]
                                 },
                             },
-                            "required": ["access-points", "match", "set-name"],
-                            "dependencies": {
-                                "set-name": ["match"]
-                            }
+                            "required": ["access-points", "match", "set-name"]
                         }
                     },
                 }
