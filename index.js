@@ -44,7 +44,6 @@ const schema = {
         network: {
             type: "object",
             additionalProperties: false,
-            required: ["ethernets"],
             properties: {
                 renderer: {
                     type: "string",
@@ -64,10 +63,10 @@ const schema = {
                         },
                     },
                     patternProperties: {
-                        "[azAZ09-]{0,18}": {
+                        "[azAZ09-]{1,15}": {
                             additionalProperties: false,
                             properties: {
-                                match: {
+                                "match": {
                                     type: "object",
                                     additionalProperties: false,
                                     properties: {
@@ -83,14 +82,86 @@ const schema = {
                                             type: "string",
                                             faker: "internet.mac"
                                         }
-                                    }
+                                    },
+                                },
+                                "set-name": {
+                                    type: "string"
                                 },
                                 optional: {
+                                    type: "boolean"
+                                },
+                                wakeonlan: {
+                                    type: "boolean"
+                                },
+                                "emit-lldp": {
+                                    type: "boolean"
+                                },
+                                "receive-checksum-offload": {
+                                    type: "boolean"
+                                },
+                                "transmit-checksum-offload": {
+                                    type: "boolean"
+                                },
+                                "tcp-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "tcp6-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "generic-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "generic-receive-offload": {
+                                    type: "boolean"
+                                },
+                                "large-receive-offload": {
                                     type: "boolean"
                                 },
                                 macaddress: {
                                     type: "string",
                                     faker: "internet.mac"
+                                },
+                                dhcp4: {
+                                    type: "boolean"
+                                },
+                                dhcp6: {
+                                    type: "boolean"
+                                },
+                                "ipv6-mtu": {
+                                    type: "integer",
+                                    minimum: 0
+                                },
+                                "ipv6-privacy": {
+                                    type: "boolean"
+                                },
+                                "link-local": {
+                                    type: "array",
+                                    items: [{
+                                        type: "string",
+                                        enum: ["ipv4", "ipv6"],
+                                    }
+                                    ]
+                                },
+                                "ignore-carrier": {
+                                    type: "boolean"
+                                },
+                                critical: {
+                                    type: "boolean"
+                                },
+                                "dhcp-identifier": {
+                                    type: "string",
+                                    enum: ["duid", "mac"]
+                                },
+                                "accept-ra": {
+                                    type: "boolean"
+                                },
+                                gateway4: {
+                                    type: "string",
+                                    faker: "internet.ipv4"
+                                },
+                                gateway6: {
+                                    type: "string",
+                                    faker: "internet.ipv6"
                                 },
                                 addresses: {
                                     type: "array",
@@ -177,35 +248,35 @@ const schema = {
                                             },
                                             metric: {
                                                 type: "integer",
-                                                minimum: -100,
+                                                minimum: 0
                                             },
                                             type: {
                                                 type: "string",
-                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve", "aadas*&%"]
+                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
                                             },
                                             scope: {
                                                 type: "string",
-                                                enum: ["global", "link", "host", "adasd*&%&"]
+                                                enum: ["global", "link", "host"]
                                             },
                                             table: {
                                                 type: "integer",
-                                                minimum: -100
+                                                minimum: 0
                                             },
                                             mtu: {
                                                 type: "integer",
-                                                minimum: -100
+                                                minimum: 0
                                             },
                                             "congestion-window": {
                                                 type: "integer",
-                                                minimum: -100
+                                                minimum: 0
                                             },
                                             "advertised-receive-window": {
                                                 type: "integer",
-                                                minimum: -100
+                                                minimum: 0
                                             }
 
                                         },
-                                        required: ["to"]
+                                        required: ["to", "via"]
                                     }
                                 },
                                 "routing-policy": {
@@ -224,31 +295,364 @@ const schema = {
                                             },
                                             table: {
                                                 type: "integer",
-                                                minimum: -100
+                                                minimum: 0,
                                             },
                                             priority: {
                                                 type: "integer",
-                                                minimum: -10
+                                                minimum: 0,
                                             },
                                             mark: {
                                                 type: "integer",
-                                                minimum: -10
+                                                minimum: 0,
                                             },
                                             "type-of-service": {
                                                 type: "integer",
-                                                minimum: -10,
-                                                maximum: 300
+                                                minimum: 0,
+                                                maximum: 255
+                                            }
+                                        },
+                                        required: ["to", "via"],
+                                    }
+                                }
+                            },
+                        }
+                    }
+                },
+                wifis: {
+                    type: "object",
+                    properties: {
+                        renderer: {
+                            type: "string",
+                            enum: ["networkd", "NetworkManager"]
+                        },
+                    },
+                    patternProperties: {
+                        "[azAZ09-]{1,15}": {
+                            additionalProperties: false,
+                            properties: {
+                                "match": {
+                                    type: "object",
+                                    additionalProperties: false,
+                                    properties: {
+                                        name: {
+                                            type: "string",
+                                            faker: "lorem.word"
+                                        },
+                                        driver: {
+                                            type: "string",
+                                            faker: "lorem.word"
+                                        },
+                                        macaddress: {
+                                            type: "string",
+                                            faker: "internet.mac"
+                                        }
+                                    },
+                                },
+                                "set-name": {
+                                    type: "string"
+                                },
+                                optional: {
+                                    type: "boolean"
+                                },
+                                "emit-lldp": {
+                                    type: "boolean"
+                                },
+                                "receive-checksum-offload": {
+                                    type: "boolean"
+                                },
+                                "transmit-checksum-offload": {
+                                    type: "boolean"
+                                },
+                                "tcp-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "tcp6-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "generic-segmentation-offload": {
+                                    type: "boolean"
+                                },
+                                "generic-receive-offload": {
+                                    type: "boolean"
+                                },
+                                "large-receive-offload": {
+                                    type: "boolean"
+                                },
+                                macaddress: {
+                                    type: "string",
+                                    faker: "internet.mac"
+                                },
+                                dhcp4: {
+                                    type: "boolean"
+                                },
+                                dhcp6: {
+                                    type: "boolean"
+                                },
+                                "ipv6-mtu": {
+                                    type: "integer",
+                                    minimum: 0
+                                },
+                                "ipv6-privacy": {
+                                    type: "boolean"
+                                },
+                                "link-local": {
+                                    type: "array",
+                                    items: [{
+                                        type: "string",
+                                        enum: ["ipv4", "ipv6"],
+                                    }
+                                    ]
+                                },
+                                "ignore-carrier": {
+                                    type: "boolean"
+                                },
+                                critical: {
+                                    type: "boolean"
+                                },
+                                "dhcp-identifier": {
+                                    type: "string",
+                                    enum: ["duid", "mac"]
+                                },
+                                "accept-ra": {
+                                    type: "boolean"
+                                },
+                                gateway4: {
+                                    type: "string",
+                                    faker: "internet.ipv4"
+                                },
+                                gateway6: {
+                                    type: "string",
+                                    faker: "internet.ipv6"
+                                },
+                                addresses: {
+                                    type: "array",
+                                    items: {
+                                        anyOf: [
+                                            {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix",
+                                            },
+                                            {
+                                                type: "object",
+                                                patternProperties: {
+                                                    "192\\.168\\.[1-9]{2}\\.0/24": {
+                                                        type: "object",
+                                                        additionalProperties: false,
+                                                        properties: {
+                                                            lifetime: {
+                                                                type: "string",
+                                                                enum: ["forever", 0]
+                                                            },
+                                                            label: {
+                                                                type: "string",
+                                                                maxLength: 15,
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        ]
+                                    }
+                                },
+                                nameservers: {
+                                    type: "object",
+                                    additionalProperties: false,
+                                    properties: {
+                                        search: {
+                                            type: "array",
+                                            items: {
+                                                type: "string",
+                                                faker: "internet.domainName",
+                                            }
+                                        },
+                                        addresses: {
+                                            type: "array",
+                                            items: {
+
+                                                anyOf: [
+                                                    {
+                                                        type: "string",
+                                                        faker: "internet.ipv4",
+                                                        format: "ipv4"
+                                                    },
+                                                    {
+                                                        type: "string",
+                                                        faker: "internet.ipv6",
+                                                        format: "ipv6"
+                                                    }
+
+                                                ]
                                             }
                                         }
                                     }
-                                }
+                                },
+                                routes: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                            from: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            to: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            via: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withoutprefix"
+                                            },
+                                            "on-link": {
+                                                type: "boolean"
+                                            },
+                                            metric: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            type: {
+                                                type: "string",
+                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
+                                            },
+                                            scope: {
+                                                type: "string",
+                                                enum: ["global", "link", "host"]
+                                            },
+                                            table: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            mtu: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            "congestion-window": {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            "advertised-receive-window": {
+                                                type: "integer",
+                                                minimum: 0
+                                            }
 
+                                        },
+                                        required: ["to", "via"]
+                                    }
+                                },
+                                "routing-policy": {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                            from: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            to: {
+                                                type: "string",
+                                                faker: "ipv4_or_ipv6.withprefix"
+                                            },
+                                            table: {
+                                                type: "integer",
+                                                minimum: 0,
+                                            },
+                                            priority: {
+                                                type: "integer",
+                                                minimum: 0,
+                                            },
+                                            mark: {
+                                                type: "integer",
+                                                minimum: 0,
+                                            },
+                                            "type-of-service": {
+                                                type: "integer",
+                                                minimum: 0,
+                                                maximum: 255
+                                            }
+                                        },
+                                        required: ["to", "via"],
+                                    }
+                                },
+                                "access-points": {
+                                    type: "object",
+                                    patternProperties: {
+                                        "[azAZ09 ]+": {
+                                            type: "object",
+                                            additionalProperties: false,
+                                            properties: {
+                                                password: {
+                                                    type: "string"
+                                                },
+                                                mode: {
+                                                    type: "string",
+                                                    enum: ["infrastructure", "ap", "adhoc"]
+                                                },
+                                                bssid: {
+                                                    type: "string",
+                                                    faker: "internet.mac"
+                                                },
+                                                band: {
+                                                    type: "string",
+                                                    enum: ["5GHz", "2.4GHz"]
+                                                },
+                                                channel: {
+                                                    type: "integer",
+                                                    minimum: 0
+                                                },
+                                                hidden: {
+                                                    type: "boolean"
+                                                },
+                                                auth: {
+                                                    type: "object",
+                                                    additionalProperties: false,
+                                                    properties: {
+                                                        "key-management": {
+                                                            type: "string",
+                                                            enum: ["none", "psk", "eap"]
+                                                        },
+                                                        password: {
+                                                            type: "string"
+                                                        },
+                                                        method: {
+                                                            type: "string",
+                                                            enum: ["tls", "peap", "ttls"]
+                                                        },
+                                                        identity: {
+                                                            type: "string"
+                                                        },
+                                                        "anonymous-identity": {
+                                                            type: "string",
+                                                        },
+                                                        "ca-certificate": {
+                                                            type: "string"
+                                                        },
+                                                        "client-certificate": {
+                                                            type: "string"
+                                                        },
+                                                        "client-key": {
+                                                            type: "string"
+                                                        },
+                                                        "client-key-password": {
+                                                            type: "string"
+                                                        },
+                                                        "phase2-auth": {
+                                                            type: "string"
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        },
+                                    },
+                                    minItems: 1,
+                                },
                             }
                         }
                     },
-                },
+                }
             },
-            required: ["network"],
+            required: ["ethernets"],
             definitions: {
                 positiveInt: {
                     type: "integer",
