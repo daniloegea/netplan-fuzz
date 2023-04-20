@@ -17,6 +17,40 @@ const vrfs_schema = {
                     minimum: 2,
                     maximum: 2
                 },
+                ethernets: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                        "eth0": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
+                        "eth1": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
+                        "eth2": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        }
+                    },
+                    required: ["eth0", "eth1", "eth2"]
+                },
                 vrfs: {
                     type: "object",
                     properties: {
@@ -33,6 +67,14 @@ const vrfs_schema = {
                                     type: "integer",
                                     minimum: 100,
                                     maximum: 100
+                                },
+                                interfaces: {
+                                    type: "array",
+                                    uniqueItems: true,
+                                    items: {
+                                        type: "string",
+                                        enum: ["eth0", "eth1", "eth2"]
+                                    }
                                 },
                                 routes: {
                                     type: "array",
