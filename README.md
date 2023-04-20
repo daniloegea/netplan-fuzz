@@ -1,4 +1,4 @@
-netplan-fuzz uses [jason-schema-faker](https://github.com/json-schema-faker/json-schema-faker) to generate random Netplan YAML files from a JSON schema.
+netplan-fuzz uses [json-schema-faker](https://github.com/json-schema-faker/json-schema-faker) to generate random Netplan YAML files from a JSON schema.
 
 ## How to use it
 
