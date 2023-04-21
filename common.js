@@ -15,6 +15,7 @@ const common_properties = {
     "accept-ra": {
         type: "boolean"
     },
+    /*
     gateway4: {
         type: "string",
         faker: "internet.ipv4"
@@ -23,6 +24,7 @@ const common_properties = {
         type: "string",
         faker: "internet.ipv6"
     },
+    */
     addresses: {
         type: "array",
         items: {
