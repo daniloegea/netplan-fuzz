@@ -80,14 +80,7 @@ const vlans_schema = {
                     required: ["[azAZ09-]{1,15}"]
                 },
             },
-            required: ["ethernets"],
-            definitions: {
-                positiveInt: {
-                    type: "integer",
-                    minimum: 0,
-                    exclusiveMinimum: true,
-                }
-            }
+            required: ["ethernets", "vlans"]
         }
     }
 }

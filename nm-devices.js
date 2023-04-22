@@ -49,9 +49,11 @@ const nmdevices_schema = {
                                                 "connection.type": {
                                                     type: "string"
                                                 }
-                                            }
+                                            },
+                                            required: ["connection.type"]
                                         }
-                                    }
+                                    },
+                                    required: ["passthrough"]
                                 },
                             },
                             required: ["networkmanager"]
@@ -60,14 +62,7 @@ const nmdevices_schema = {
                     required: ["[azAZ09-]{1,15}"]
                 },
             },
-            required: ["nm-devices"],
-            definitions: {
-                positiveInt: {
-                    type: "integer",
-                    minimum: 0,
-                    exclusiveMinimum: true,
-                }
-            }
+            required: ["nm-devices"]
         }
     }
 }

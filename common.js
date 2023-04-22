@@ -95,15 +95,15 @@ const common_properties = {
             properties: {
                 from: {
                     type: "string",
-                    faker: "ipv4_or_ipv6.withprefix"
+                    faker: "ipv4.withprefix"
                 },
                 to: {
                     type: "string",
-                    faker: "ipv4_or_ipv6.withprefix"
+                    faker: "ipv4.withprefix"
                 },
                 via: {
                     type: "string",
-                    faker: "ipv4_or_ipv6.withoutprefix"
+                    faker: "internet.ipv4"
                 },
                 "on-link": {
                     type: "boolean"
@@ -149,11 +149,11 @@ const common_properties = {
             properties: {
                 from: {
                     type: "string",
-                    faker: "ipv4_or_ipv6.withprefix"
+                    faker: "ipv4.withprefix"
                 },
                 to: {
                     type: "string",
-                    faker: "ipv4_or_ipv6.withprefix"
+                    faker: "ipv4.withprefix"
                 },
                 table: {
                     type: "integer",

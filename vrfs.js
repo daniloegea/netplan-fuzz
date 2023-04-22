@@ -84,15 +84,15 @@ const vrfs_schema = {
                                         properties: {
                                             from: {
                                                 type: "string",
-                                                faker: "ipv4_or_ipv6.withprefix"
+                                                faker: "ipv4.withprefix"
                                             },
                                             to: {
                                                 type: "string",
-                                                faker: "ipv4_or_ipv6.withprefix"
+                                                faker: "ipv4.withprefix"
                                             },
                                             via: {
                                                 type: "string",
-                                                faker: "ipv4_or_ipv6.withoutprefix"
+                                                faker: "internet.ipv4"
                                             },
                                             "on-link": {
                                                 type: "boolean"
@@ -139,11 +139,11 @@ const vrfs_schema = {
                                         properties: {
                                             from: {
                                                 type: "string",
-                                                faker: "ipv4_or_ipv6.withprefix"
+                                                faker: "ipv4.withprefix"
                                             },
                                             to: {
                                                 type: "string",
-                                                faker: "ipv4_or_ipv6.withprefix"
+                                                faker: "ipv4.withprefix"
                                             },
                                             table: {
                                                 type: "integer",
@@ -174,14 +174,7 @@ const vrfs_schema = {
                     required: ["[azAZ09-]{1,15}"]
                 },
             },
-            required: ["ethernets"],
-            definitions: {
-                positiveInt: {
-                    type: "integer",
-                    minimum: 0,
-                    exclusiveMinimum: true,
-                }
-            }
+            required: ["vrfs", "ethernets"]
         }
     }
 }

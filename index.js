@@ -12,6 +12,8 @@ import vlans_schema from './vlans.js';
 import bridges_schema from './bridges.js';
 import bonds_schema from './bonds.js';
 import nmdevices_schema from './nm-devices.js';
+import wireguard_schema from './tunnels.js';
+
 
 JSONSchemaFaker.extend('faker', () => {
     faker.ipv4 = {
@@ -26,17 +28,25 @@ JSONSchemaFaker.extend('faker', () => {
     }
     faker.ipv4_or_ipv6 = {
         withprefix: _ => {
-            if (Math.random() % 2 == 0) {
+            if (Math.floor(Math.random() * 1000) % 2 == 0) {
                 return faker.internet.ipv6() + '/64';
             } else {
                 return faker.internet.ipv4() + '/24';
             }
         },
         withoutprefix: _ => {
-            if (Math.random() % 2 == 0) {
+            if (Math.floor(Math.random() * 1000) % 2 == 0) {
                 return faker.internet.ipv6();
             } else {
                 return faker.internet.ipv4();
+            }
+        },
+        withport: _ => {
+            var port = Math.floor(Math.random() * 65536);
+            if (Math.floor(Math.random() * 1000) % 2 == 0) {
+                return faker.internet.ipv6() + ":" + port.toString();
+            } else {
+                return faker.internet.ipv4() + ":" + port.toString();
             }
         }
     }
@@ -100,6 +110,10 @@ const bonds = jsf.generate(bonds_schema);
 check_and_fix_addresses(bonds, "bonds")
 writeYamlFile.sync('fakeroot/etc/netplan/bonds.yaml', bonds);
 fs.chmodSync('fakeroot/etc/netplan/bonds.yaml', 0o600);
+
+const wireguard = jsf.generate(wireguard_schema);
+writeYamlFile.sync('fakeroot/etc/netplan/wireguard.yaml', wireguard);
+fs.chmodSync('fakeroot/etc/netplan/wireguard.yaml', 0o600);
 
 const nmdevices = jsf.generate(nmdevices_schema);
 writeYamlFile.sync('fakeroot/etc/netplan/nmdevices.yaml', nmdevices);

@@ -89,10 +89,12 @@ const ethernets_schema = {
                                     type: "string",
                                     faker: "internet.mac"
                                 },
+                                /*
                                 "ipv6-mtu": {
                                     type: "integer",
                                     minimum: 0
                                 },
+                                */
                                 "ipv6-privacy": {
                                     type: "boolean"
                                 },
@@ -114,14 +116,7 @@ const ethernets_schema = {
                     required: ["[azAZ09-]{1,15}"]
                 },
             },
-            required: ["ethernets"],
-            definitions: {
-                positiveInt: {
-                    type: "integer",
-                    minimum: 0,
-                    exclusiveMinimum: true,
-                }
-            }
+            required: ["ethernets"]
         }
     }
 }
