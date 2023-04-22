@@ -38,10 +38,12 @@ const ethernets_schema = {
                                             type: "string",
                                             faker: "lorem.word"
                                         },
+                                        /*
                                         driver: {
                                             type: "string",
                                             faker: "lorem.word"
                                         },
+                                        */
                                         macaddress: {
                                             type: "string",
                                             faker: "internet.mac"

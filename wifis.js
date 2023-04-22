@@ -30,7 +30,7 @@ const wifis_schema = {
                             additionalProperties: false,
                             properties: {
                                 ...common_properties,
-                                
+                                /*
                                 "match": {
                                     type: "object",
                                     additionalProperties: false,
@@ -111,7 +111,9 @@ const wifis_schema = {
                                             additionalProperties: false,
                                             properties: {
                                                 password: {
-                                                    type: "string"
+                                                    type: "string",
+                                                    "minLength": 8,
+                                                    "maxLength": 63
                                                 },
                                                 mode: {
                                                     type: "string",
@@ -146,7 +148,9 @@ const wifis_schema = {
                                                             enum: ["none", "psk", "eap"]
                                                         },
                                                         password: {
-                                                            type: "string"
+                                                            type: "string",
+                                                            "minLength": 8,
+                                                            "maxLength": 63
                                                         },
                                                         method: {
                                                             type: "string",
