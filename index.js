@@ -13,6 +13,7 @@ import bridges_schema from './bridges.js';
 import bonds_schema from './bonds.js';
 import nmdevices_schema from './nm-devices.js';
 import wireguard_schema from './tunnels.js';
+import modems_schema from './modems.js';
 
 
 JSONSchemaFaker.extend('faker', () => {
@@ -118,3 +119,7 @@ fs.chmodSync('fakeroot/etc/netplan/wireguard.yaml', 0o600);
 const nmdevices = jsf.generate(nmdevices_schema);
 writeYamlFile.sync('fakeroot/etc/netplan/nmdevices.yaml', nmdevices);
 fs.chmodSync('fakeroot/etc/netplan/nmdevices.yaml', 0o600);
+
+const modems = jsf.generate(modems_schema);
+writeYamlFile.sync('fakeroot/etc/netplan/modems.yaml', modems);
+fs.chmodSync('fakeroot/etc/netplan/modems.yaml', 0o600);
