@@ -1,6 +1,6 @@
 import common_properties from "./common.js";
 
-const wireguard_schema = {
+export const wireguard_schema = {
     type: "object",
     additionalProperties: false,
     properties: {
@@ -155,5 +155,216 @@ const wireguard_schema = {
     }
 }
 
+export const sit_schema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        network: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+                renderer: {
+                    type: "string",
+                    enum: ["networkd", "NetworkManager"]
+                },
+                version: {
+                    type: "integer",
+                    minimum: 2,
+                    maximum: 2
+                },
+                tunnels: {
+                    type: "object",
+                    properties: {
+                        renderer: {
+                            type: "string",
+                            enum: ["networkd", "NetworkManager"]
+                        },
+                    },
+                    patternProperties: {
+                        "[azAZ09-]{1,15}": {
+                            additionalProperties: false,
+                            properties: {
+                                addresses: {
+                                    type: "array",
+                                    items: {
+                                        type: "string",
+                                        faker: "ipv4_or_ipv6.withprefix"
+                                    }
+                                },
+                                mode: {
+                                    type: "string",
+                                    enum: ["sit"]
+                                },
+                                remote: {
+                                    type: "string",
+                                    faker: "internet.ipv4"
+                                },
+                                local: {
+                                    type: "string",
+                                    faker: "internet.ipv4"
+                                },
+                                addresses: {
+                                    type: "array",
+                                    items: {
+                                        type: "string",
+                                        faker: "ipv6.withprefix",
+                                    },
+                                },
+                                routes: {
+                                    type: "array",
+                                    items: {
+                                        type: "object",
+                                        additionalProperties: false,
+                                        properties: {
+                                            from: {
+                                                type: "string",
+                                                faker: "ipv4.withprefix"
+                                            },
+                                            to: {
+                                                type: "string",
+                                                faker: "ipv4.withprefix"
+                                            },
+                                            via: {
+                                                type: "string",
+                                                faker: "internet.ipv4"
+                                            },
+                                            "on-link": {
+                                                type: "boolean"
+                                            },
+                                            metric: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            type: {
+                                                type: "string",
+                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
+                                            },
+                                            scope: {
+                                                type: "string",
+                                                enum: ["global", "link", "host"]
+                                            },
+                                            table: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            mtu: {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            "congestion-window": {
+                                                type: "integer",
+                                                minimum: 0
+                                            },
+                                            "advertised-receive-window": {
+                                                type: "integer",
+                                                minimum: 0
+                                            }
+                                        },
+                                        required: ["to", "via"]
+                                    }
+                                },
+                            },
+                            required: ["mode", "remote", "local"]
+                        }
+                    },
+                    required: ["[azAZ09-]{1,15}"]
+                },
+            },
+            required: ["tunnels"]
+        }
+    }
+}
+
+export const vxlan_schema = {
+    type: "object",
+    additionalProperties: false,
+    properties: {
+        network: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+                renderer: {
+                    type: "string",
+                    enum: ["networkd", "NetworkManager"]
+                },
+                version: {
+                    type: "integer",
+                    minimum: 2,
+                    maximum: 2
+                },
+                ethernets: {
+                    type: "object",
+                    additionalProperties: false,
+                    properties: {
+                        "eth0": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        }
+                    },
+                    required: ["eth0"]
+                },
+                tunnels: {
+                    type: "object",
+                    properties: {
+                        renderer: {
+                            type: "string",
+                            enum: ["networkd", "NetworkManager"]
+                        },
+                    },
+                    patternProperties: {
+                        "[azAZ09-]{1,15}": {
+                            additionalProperties: false,
+                            properties: {
+                                mode: {
+                                    type: "string",
+                                    enum: ["vxlan"]
+                                },
+                                id: {
+                                    type: "integer",
+                                    minimum: 1,
+                                    maximum: 16777215
+                                },
+                                link: {
+                                    type: "string",
+                                    enum: ["eth0"]
+                                },
+                                local: {
+                                    type: "string",
+                                    faker: "internet.ipv4"
+                                },
+                                mtu: {
+                                    type: "integer",
+                                    minimum: 1
+                                },
+                                "accept-ra": {
+                                    type: "boolean"
+                                },
+                                "neigh-suppress": {
+                                    type: "boolean"
+                                },
+                                "mac-learning": {
+                                    type: "boolean"
+                                },
+                                port: {
+                                    type: "integer",
+                                    minimum: 0,
+                                    maximum: 65535
+                                }
+                            },
+                            required: ["mode", "id", "local"]
+                        }
+                    },
+                    required: ["[azAZ09-]{1,15}"]
+                },
+            },
+            required: ["tunnels", "ethernets"]
+        }
+    }
+}
 
 export default wireguard_schema;

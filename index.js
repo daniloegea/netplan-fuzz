@@ -12,7 +12,7 @@ import vlans_schema from './vlans.js';
 import bridges_schema from './bridges.js';
 import bonds_schema from './bonds.js';
 import nmdevices_schema from './nm-devices.js';
-import wireguard_schema from './tunnels.js';
+import {wireguard_schema, sit_schema, vxlan_schema} from './tunnels.js';
 import modems_schema from './modems.js';
 
 
@@ -115,6 +115,14 @@ fs.chmodSync('fakeroot/etc/netplan/bonds.yaml', 0o600);
 const wireguard = jsf.generate(wireguard_schema);
 writeYamlFile.sync('fakeroot/etc/netplan/wireguard.yaml', wireguard);
 fs.chmodSync('fakeroot/etc/netplan/wireguard.yaml', 0o600);
+
+const sit = jsf.generate(sit_schema);
+writeYamlFile.sync('fakeroot/etc/netplan/sit.yaml', sit);
+fs.chmodSync('fakeroot/etc/netplan/sit.yaml', 0o600);
+
+const vxlans = jsf.generate(vxlan_schema);
+writeYamlFile.sync('fakeroot/etc/netplan/vxlans.yaml', vxlans);
+fs.chmodSync('fakeroot/etc/netplan/vxlans.yaml', 0o600);
 
 const nmdevices = jsf.generate(nmdevices_schema);
 writeYamlFile.sync('fakeroot/etc/netplan/nmdevices.yaml', nmdevices);
