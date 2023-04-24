@@ -139,7 +139,7 @@ const wireguard_schema = {
                                                 required: ["public"]
                                             }
                                         },
-                                        required: ["keys"]
+                                        required: ["keys", "allowed-ips"]
                                     }
                                 }
 
