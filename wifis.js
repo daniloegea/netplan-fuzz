@@ -175,6 +175,28 @@ const wifis_schema = {
                                                             type: "string"
                                                         }
                                                     }
+                                                },
+                                                networkmanager: {
+                                                    type: "object",
+                                                    additionalProperties: false,
+                                                    properties: {
+                                                        uuid: {
+                                                            type: "string"
+                                                        },
+                                                        name: {
+                                                            type: "string"
+                                                        },
+                                                        passthrough: {
+                                                            type: "object",
+                                                            additionalProperties: true,
+                                                            properties: {
+                                                                "connection.type": {
+                                                                    type: "string"
+                                                                }
+                                                            },
+                                                        }
+                                                    },
+                                                    required: ["passthrough"]
                                                 }
                                             }
                                         },

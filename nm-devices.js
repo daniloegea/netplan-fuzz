@@ -45,6 +45,7 @@ const nmdevices_schema = {
                                         },
                                         passthrough: {
                                             type: "object",
+                                            additionalProperties: true,
                                             properties: {
                                                 "connection.type": {
                                                     type: "string"
