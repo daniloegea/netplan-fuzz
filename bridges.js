@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const bridges_schema = {
     type: "object",
@@ -63,7 +63,7 @@ const bridges_schema = {
                         "[azAZ09-]{1,15}": {
                             additionalProperties: false,
                             properties: {
-                                ...common_properties,
+                                ...common.common_properties,
                                 interfaces: {
                                     type: "array",
                                     uniqueItems: true,
@@ -136,7 +136,9 @@ const bridges_schema = {
                                             type: "boolean"
                                         }
                                     }
-                                }
+                                },
+                                ...common.networkmanager_settings,
+                                ...common.openvswitch_bridge_extras
                             },
                         }
                     },

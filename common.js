@@ -1,4 +1,98 @@
-const common_properties = {
+export const routes = {
+    routes: {
+        type: "array",
+        items: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+                from: {
+                    type: "string",
+                    faker: "ipv4.withprefix"
+                },
+                to: {
+                    type: "string",
+                    faker: "ipv4.withprefix"
+                },
+                via: {
+                    type: "string",
+                    faker: "internet.ipv4"
+                },
+                "on-link": {
+                    type: "boolean"
+                },
+                metric: {
+                    type: "integer",
+                    minimum: 0
+                },
+                type: {
+                    type: "string",
+                    enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
+                },
+                scope: {
+                    type: "string",
+                    enum: ["global", "link", "host"]
+                },
+                table: {
+                    type: "integer",
+                    minimum: 0
+                },
+                mtu: {
+                    type: "integer",
+                    minimum: 0
+                },
+                "congestion-window": {
+                    type: "integer",
+                    minimum: 0
+                },
+                "advertised-receive-window": {
+                    type: "integer",
+                    minimum: 0
+                }
+
+            },
+            required: ["to", "via"]
+        }
+    }
+};
+export const routing_policy = {
+    "routing-policy": {
+        type: "array",
+        items: {
+            type: "object",
+            additionalProperties: false,
+            properties: {
+                from: {
+                    type: "string",
+                    faker: "ipv4.withprefix"
+                },
+                to: {
+                    type: "string",
+                    faker: "ipv4.withprefix"
+                },
+                table: {
+                    type: "integer",
+                    minimum: 0,
+                },
+                priority: {
+                    type: "integer",
+                    minimum: 0,
+                },
+                mark: {
+                    type: "integer",
+                    minimum: 0,
+                },
+                "type-of-service": {
+                    type: "integer",
+                    minimum: 0,
+                    maximum: 255
+                }
+            },
+            required: ["to", "via"],
+        }
+    }
+};
+
+export const common_properties = {
     dhcp4: {
         type: "boolean"
     },
@@ -87,94 +181,102 @@ const common_properties = {
             }
         }
     },
-    routes: {
-        type: "array",
-        items: {
-            type: "object",
-            additionalProperties: false,
-            properties: {
-                from: {
-                    type: "string",
-                    faker: "ipv4.withprefix"
-                },
-                to: {
-                    type: "string",
-                    faker: "ipv4.withprefix"
-                },
-                via: {
-                    type: "string",
-                    faker: "internet.ipv4"
-                },
-                "on-link": {
-                    type: "boolean"
-                },
-                metric: {
-                    type: "integer",
-                    minimum: 0
-                },
-                type: {
-                    type: "string",
-                    enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
-                },
-                scope: {
-                    type: "string",
-                    enum: ["global", "link", "host"]
-                },
-                table: {
-                    type: "integer",
-                    minimum: 0
-                },
-                mtu: {
-                    type: "integer",
-                    minimum: 0
-                },
-                "congestion-window": {
-                    type: "integer",
-                    minimum: 0
-                },
-                "advertised-receive-window": {
-                    type: "integer",
-                    minimum: 0
-                }
+    ...routes,
+    ...routing_policy
+};
 
+export const networkmanager_settings = {
+    networkmanager: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            uuid: {
+                type: "string"
             },
-            required: ["to", "via"]
-        }
-    },
-    "routing-policy": {
-        type: "array",
-        items: {
-            type: "object",
-            additionalProperties: false,
-            properties: {
-                from: {
+            name: {
+                type: "string"
+            },
+            passthrough: {
+                type: "object",
+                additionalProperties: true,
+                properties: {
+                    "connection.type": {
+                        type: "string"
+                    }
+                },
+            }
+        },
+        required: ["passthrough"]
+    }
+};
+
+export const openvswitch_bond_extras = {
+    openvswitch: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            "external-ids": {
+                type: "object"
+            },
+            "other-config": {
+                type: "object"
+            },
+            lacp: {
+                type: "string",
+                enum: ["active", "passive", "off"]
+            },
+        },
+        required: ["passthrough"]
+    }
+};
+
+export const openvswitch_bridge_extras = {
+    openvswitch: {
+        type: "object",
+        additionalProperties: false,
+        properties: {
+            "external-ids": {
+                type: "object"
+            },
+            "other-config": {
+                type: "object"
+            },
+            "fail-mode": {
+                type: "string",
+                enum: ["standalone", "secure"]
+            },
+            "mcast-snooping": {
+                type: "boolean"
+            },
+            rstp: {
+                type: "boolean"
+            },
+            protocols: {
+                type: "array",
+                items: {
                     type: "string",
-                    faker: "ipv4.withprefix"
-                },
-                to: {
-                    type: "string",
-                    faker: "ipv4.withprefix"
-                },
-                table: {
-                    type: "integer",
-                    minimum: 0,
-                },
-                priority: {
-                    type: "integer",
-                    minimum: 0,
-                },
-                mark: {
-                    type: "integer",
-                    minimum: 0,
-                },
-                "type-of-service": {
-                    type: "integer",
-                    minimum: 0,
-                    maximum: 255
+                    enum: ["OpenFlow10", "OpenFlow11", "OpenFlow12", "OpenFlow13", "OpenFlow14", "OpenFlow15"]
                 }
             },
-            required: ["to", "via"],
-        }
+            "controller": {
+                type: "object",
+                additionalProperties: false,
+                properties: {
+                    "addresses": {
+                        type: "array",
+                        items: {
+                            type: "string",
+                            faker: "openvswitch.controller_address"
+                        }
+                    },
+                    "connection-mode": {
+                        type: "string",
+                        enum: ["in-band", "out-of-band"]
+                    }
+
+                }
+            }
+        },
     }
 };
 

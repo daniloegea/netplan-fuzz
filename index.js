@@ -14,6 +14,7 @@ import bonds_schema from './bonds.js';
 import nmdevices_schema from './nm-devices.js';
 import {wireguard_schema, sit_schema, vxlan_schema} from './tunnels.js';
 import modems_schema from './modems.js';
+import openvswitch_schema from './openvswitch.js'
 
 
 JSONSchemaFaker.extend('faker', () => {
@@ -48,6 +49,24 @@ JSONSchemaFaker.extend('faker', () => {
                 return faker.internet.ipv6() + ":" + port.toString();
             } else {
                 return faker.internet.ipv4() + ":" + port.toString();
+            }
+        }
+    }
+    faker.openvswitch = {
+        controller_address: _ => {
+            var number = Math.floor(Math.random() * 65536) % 6;
+            if (number == 0) {
+                return "unix:" + faker.system.filePath();
+            } else if (number == 1) {
+                return "punix:" + faker.system.filePath();
+            } else if (number == 2) {
+                return "tcp:" + faker.internet.ipv4() + ":" + faker.internet.port();
+            } else if (number == 3) {
+                return "ptcp:" + faker.internet.port() + ":" + faker.internet.ipv4();
+            } else if (number == 4) {
+                return "ssl:" + faker.internet.ipv4() + ":" + faker.internet.port();
+            } else if (number == 5) {
+                return "pssl:" + faker.internet.port() + ":" + faker.internet.ipv4();
             }
         }
     }
@@ -131,3 +150,7 @@ fs.chmodSync('fakeroot/etc/netplan/nmdevices.yaml', 0o600);
 const modems = jsf.generate(modems_schema);
 writeYamlFile.sync('fakeroot/etc/netplan/modems.yaml', modems);
 fs.chmodSync('fakeroot/etc/netplan/modems.yaml', 0o600);
+
+const ovs = jsf.generate(openvswitch_schema);
+writeYamlFile.sync('fakeroot/etc/netplan/openvswitch.yaml', ovs);
+fs.chmodSync('fakeroot/etc/netplan/openvswitch.yaml', 0o600);

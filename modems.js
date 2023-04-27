@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const modems_schema = {
     type: "object",
@@ -64,7 +64,8 @@ const modems_schema = {
                                 },
                                 "sim-operator-id": {
                                     type: "integer"
-                                }
+                                },
+                                ...common.networkmanager_settings,
                             },
                             required: ["renderer"]
                         }

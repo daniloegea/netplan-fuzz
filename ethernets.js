@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const ethernets_schema = {
     type: "object",
@@ -29,7 +29,7 @@ const ethernets_schema = {
                         "[azAZ09-]{1,15}": {
                             additionalProperties: false,
                             properties: {
-                                ...common_properties,
+                                ...common.common_properties,
                                 "match": {
                                     type: "object",
                                     additionalProperties: false,
@@ -109,6 +109,8 @@ const ethernets_schema = {
                                 "ignore-carrier": {
                                     type: "boolean"
                                 },
+                                ...common.networkmanager_settings,
+                                ...common.openvswitch
                             },
                             "required": ["match", "set-name"]
                         }

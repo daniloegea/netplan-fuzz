@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 export const wireguard_schema = {
     type: "object",
@@ -141,8 +141,8 @@ export const wireguard_schema = {
                                         },
                                         required: ["keys", "allowed-ips"]
                                     }
-                                }
-
+                                },
+                                ...common.networkmanager_settings,
                             },
                             required: ["mode", "key", "peers"]
                         }
@@ -210,59 +210,7 @@ export const sit_schema = {
                                         faker: "ipv6.withprefix",
                                     },
                                 },
-                                routes: {
-                                    type: "array",
-                                    items: {
-                                        type: "object",
-                                        additionalProperties: false,
-                                        properties: {
-                                            from: {
-                                                type: "string",
-                                                faker: "ipv4.withprefix"
-                                            },
-                                            to: {
-                                                type: "string",
-                                                faker: "ipv4.withprefix"
-                                            },
-                                            via: {
-                                                type: "string",
-                                                faker: "internet.ipv4"
-                                            },
-                                            "on-link": {
-                                                type: "boolean"
-                                            },
-                                            metric: {
-                                                type: "integer",
-                                                minimum: 0
-                                            },
-                                            type: {
-                                                type: "string",
-                                                enum: ["unicast", "anycast", "blackhole", "broadcast", "local", "multicast", "nat", "prohibit", "throw", "unreachable", "xresolve"]
-                                            },
-                                            scope: {
-                                                type: "string",
-                                                enum: ["global", "link", "host"]
-                                            },
-                                            table: {
-                                                type: "integer",
-                                                minimum: 0
-                                            },
-                                            mtu: {
-                                                type: "integer",
-                                                minimum: 0
-                                            },
-                                            "congestion-window": {
-                                                type: "integer",
-                                                minimum: 0
-                                            },
-                                            "advertised-receive-window": {
-                                                type: "integer",
-                                                minimum: 0
-                                            }
-                                        },
-                                        required: ["to", "via"]
-                                    }
-                                },
+                                ...common.routes
                             },
                             required: ["mode", "remote", "local"]
                         }

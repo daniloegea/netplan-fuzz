@@ -1,6 +1,6 @@
 import * as common from "./common.js";
 
-const vlans_schema = {
+const openvswitch_schema = {
     type: "object",
     additionalProperties: false,
     properties: {
@@ -51,40 +51,61 @@ const vlans_schema = {
                     },
                     required: ["eth0", "eth1", "eth2"]
                 },
-                vlans: {
+                openvswitch: {
                     type: "object",
+                    additionalProperties: false,
                     properties: {
-                        renderer: {
-                            type: "string",
-                            enum: ["networkd", "NetworkManager"]
+                        "external-ids": {
+                            type: "object",
                         },
-                    },
-                    patternProperties: {
-                        "[azAZ09-]{1,15}": {
+                        "other-config": {
+                            type: "object",
+                        },
+                        protocols: {
+                            type: "array",
+                            items: {
+                                type: "string",
+                                enum: ["OpenFlow10", "OpenFlow11", "OpenFlow12", "OpenFlow13", "OpenFlow14", "OpenFlow15"]
+                            }
+                        },
+                        ssl: {
+                            type: "object",
                             additionalProperties: false,
                             properties: {
-                                ...common.common_properties,
-                                id: {
-                                    type: "integer",
-                                    minimum: 0,
-                                    maximum: 4094
-                                },
-                                link: {
+                                "ca-cert": {
                                     type: "string",
-                                    enum: ["eth0", "eth1", "eth2"]
+                                    faker: "system.filePath"
                                 },
-                                ...common.networkmanager_settings,
-                            },
-                            required: ["id", "link"]
+                                "certificate": {
+                                    type: "string",
+                                    faker: "system.filePath"
+                                },
+                                "private-key": {
+                                    type: "string",
+                                    faker: "system.filePath"
+                                },
+                            }
+                        },
+                        ports: {
+                            type: "array",
+                            items: {
+                                type: "array",
+                                minItems: 2,
+                                maxItems: 2,
+                                items: {
+                                    type: "string",
+                                    faker: "lorem.word"
+                                },
+                                
+                            }
                         }
                     },
-                    required: ["[azAZ09-]{1,15}"]
                 },
             },
-            required: ["ethernets", "vlans"]
+            required: ["vrfs", "ethernets"]
         }
     }
 }
 
 
-export default vlans_schema;
+export default openvswitch_schema;

@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const vrfs_schema = {
     type: "object",
@@ -166,7 +166,8 @@ const vrfs_schema = {
                                         },
                                         required: ["to", "via"],
                                     }
-                                }
+                                },
+                                ...common.networkmanager_settings,
                             },
                             required: ["table"]
                         }

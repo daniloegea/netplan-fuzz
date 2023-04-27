@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const bonds_schema = {
     type: "object",
@@ -63,7 +63,7 @@ const bonds_schema = {
                         "[azAZ09-]{1,15}": {
                             additionalProperties: false,
                             properties: {
-                                ...common_properties,
+                                ...common.common_properties,
                                 interfaces: {
                                     type: "array",
                                     uniqueItems: true,
@@ -162,7 +162,8 @@ const bonds_schema = {
                                             type: "string",
                                             enum: ["eth10", "eth11", "eth12"]
                                         },
-                                    }
+                                    },
+                                    ...common.networkmanager_settings,
                                 }
                             },
                         }

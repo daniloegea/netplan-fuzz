@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import * as common from "./common.js";
 
 const wifis_schema = {
     type: "object",
@@ -29,7 +29,7 @@ const wifis_schema = {
                         "[azAZ09-]{1,15}": {
                             additionalProperties: false,
                             properties: {
-                                ...common_properties,
+                                ...common.common_properties,
                                 /*
                                 "match": {
                                     type: "object",
@@ -176,28 +176,7 @@ const wifis_schema = {
                                                         }
                                                     }
                                                 },
-                                                networkmanager: {
-                                                    type: "object",
-                                                    additionalProperties: false,
-                                                    properties: {
-                                                        uuid: {
-                                                            type: "string"
-                                                        },
-                                                        name: {
-                                                            type: "string"
-                                                        },
-                                                        passthrough: {
-                                                            type: "object",
-                                                            additionalProperties: true,
-                                                            properties: {
-                                                                "connection.type": {
-                                                                    type: "string"
-                                                                }
-                                                            },
-                                                        }
-                                                    },
-                                                    required: ["passthrough"]
-                                                }
+                                                ...common.networkmanager_settings
                                             }
                                         },
                                     },
