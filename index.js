@@ -12,7 +12,7 @@ import vlans_schema from './vlans.js';
 import bridges_schema from './bridges.js';
 import bonds_schema from './bonds.js';
 import nmdevices_schema from './nm-devices.js';
-import {wireguard_schema, sit_schema, vxlan_schema} from './tunnels.js';
+import { wireguard_schema, sit_schema, vxlan_schema } from './tunnels.js';
 import modems_schema from './modems.js';
 import openvswitch_schema from './openvswitch.js'
 
@@ -73,28 +73,79 @@ JSONSchemaFaker.extend('faker', () => {
     return faker;
 });
 
-/*
-If addresses as objects were generated, set the renderer to networkd.
-NetworkManager doesn't support addresses options
-*/
-function check_and_fix_addresses(object, object_type) {
+
+function apply_fixes(object, object_type) {
+    var renderer = ""
     if (!("network" in object) || !(object_type in object["network"])) {
         return;
     }
+
+    if ("renderer" in object) {
+        renderer = object["renderer"];
+    }
+
     var interfaces = object["network"][object_type]
+
+    if ("renderer" in object["network"]) {
+        renderer = object["network"]["renderer"];
+    }
+
     Object.keys(interfaces).forEach(function (key) {
+        var has_address_options = false;
+
         if (key != "renderer") {
             var iface = interfaces[key];
 
+            if ("renderer" in iface) {
+                renderer = iface["renderer"];
+            }
+
+            /*
+            If addresses as objects were generated, set the renderer to networkd.
+            NetworkManager doesn't support addresses options
+            */
             if ("addresses" in iface) {
-                Object.keys(iface["addresses"]).forEach(function(key) {
+                Object.keys(iface["addresses"]).forEach(function (key) {
                     if (typeof iface["addresses"][key] === 'object') {
                         interfaces["renderer"] = "networkd";
                         object["network"]["renderer"] = "networkd";
                         iface["renderer"] = "networkd";
+                        renderer = "networkd";
+                        has_address_options = true;
                         return;
                     }
                 });
+            }
+
+            /*
+            If it has the networkmanager property and the renderer is not NetworkManager delete it
+            */
+            if ("networkmanager" in iface && renderer != "NetworkManager") {
+                delete object["network"][object_type][key]["networkmanager"];
+            } else {
+                /*
+                If the interface doesn't have addresses options, make sure the interface itself has renderer: NetworkManager
+                */
+                if (has_address_options == false) {
+                    iface["renderer"] = "NetworkManager";
+                }
+            }
+
+            if (object_type == "wifis") {
+                if ("access-points" in iface) {
+                    Object.keys(iface["access-points"]).forEach(function (ap_key) {
+                        if ("networkmanager" in iface["access-points"][ap_key] && renderer != "NetworkManager") {
+                            delete object["network"][object_type][key]["access-points"][ap_key]["networkmanager"];
+                        } else {
+                            /*
+                            If the interface doesn't have addresses options, make sure the interface itself has renderer: NetworkManager
+                            */
+                            if (has_address_options == false) {
+                                iface["renderer"] = "NetworkManager";
+                            }
+                        }
+                    });
+                }
             }
         }
     });
@@ -103,43 +154,47 @@ function check_and_fix_addresses(object, object_type) {
 fs.mkdirSync("fakeroot/etc/netplan", { recursive: true });
 
 const ethernets = jsf.generate(ethernets_schema);
-check_and_fix_addresses(ethernets, "ethernets")
+apply_fixes(ethernets, "ethernets")
 writeYamlFile.sync('fakeroot/etc/netplan/ethernets.yaml', ethernets);
 fs.chmodSync('fakeroot/etc/netplan/ethernets.yaml', 0o600);
 
 const wifis = jsf.generate(wifis_schema);
-check_and_fix_addresses(wifis, "wifis")
+apply_fixes(wifis, "wifis")
 writeYamlFile.sync('fakeroot/etc/netplan/wifis.yaml', wifis);
 fs.chmodSync('fakeroot/etc/netplan/wifis.yaml', 0o600);
 
 const vrfs = jsf.generate(vrfs_schema);
+apply_fixes(vrfs, "vrfs")
 writeYamlFile.sync('fakeroot/etc/netplan/vrfs.yaml', vrfs);
 fs.chmodSync('fakeroot/etc/netplan/vrfs.yaml', 0o600);
 
 const vlans = jsf.generate(vlans_schema);
-check_and_fix_addresses(vlans, "vlans")
+apply_fixes(vlans, "vlans")
 writeYamlFile.sync('fakeroot/etc/netplan/vlans.yaml', vlans);
 fs.chmodSync('fakeroot/etc/netplan/vlans.yaml', 0o600);
 
 const bridges = jsf.generate(bridges_schema);
-check_and_fix_addresses(bridges, "bridges")
+apply_fixes(bridges, "bridges")
 writeYamlFile.sync('fakeroot/etc/netplan/bridges.yaml', bridges);
 fs.chmodSync('fakeroot/etc/netplan/bridges.yaml', 0o600);
 
 const bonds = jsf.generate(bonds_schema);
-check_and_fix_addresses(bonds, "bonds")
+apply_fixes(bonds, "bonds")
 writeYamlFile.sync('fakeroot/etc/netplan/bonds.yaml', bonds);
 fs.chmodSync('fakeroot/etc/netplan/bonds.yaml', 0o600);
 
 const wireguard = jsf.generate(wireguard_schema);
+apply_fixes(wireguard, "tunnels");
 writeYamlFile.sync('fakeroot/etc/netplan/wireguard.yaml', wireguard);
 fs.chmodSync('fakeroot/etc/netplan/wireguard.yaml', 0o600);
 
 const sit = jsf.generate(sit_schema);
+apply_fixes(sit, "tunnels");
 writeYamlFile.sync('fakeroot/etc/netplan/sit.yaml', sit);
 fs.chmodSync('fakeroot/etc/netplan/sit.yaml', 0o600);
 
 const vxlans = jsf.generate(vxlan_schema);
+apply_fixes(vxlans, "tunnels");
 writeYamlFile.sync('fakeroot/etc/netplan/vxlans.yaml', vxlans);
 fs.chmodSync('fakeroot/etc/netplan/vxlans.yaml', 0o600);
 
