@@ -1,8 +1,8 @@
 {
   "dependencies": {
-    "@faker-js/faker": "^7.6.0",
-    "json-schema-faker": "^0.5.0-rcv.46",
-    "write-yaml-file": "^4.2.0"
+    "@faker-js/faker": "^8.4.1",
+    "json-schema-faker": "^0.5.6",
+    "write-yaml-file": "^5.0.0"
   },
   "name": "netplan_fuzzer",
   "version": "1.0.0",
