@@ -17,39 +17,38 @@ const openvswitch_schema = {
                     minimum: 2,
                     maximum: 2
                 },
-                ethernets: {
+                bridges: {
                     type: "object",
                     additionalProperties: false,
                     properties: {
-                        "eth0": {
+                        "ovsbr0": {
                             type: "object",
                             additionalProperties: false,
                             properties: {
-                                "dhcp4": {
-                                    type: "boolean"
+                                "interfaces": {
+                                    type: "array",
+                                    items: {
+                                        type: "string",
+                                        enum: ["port1"],
+                                    }
                                 }
                             }
                         },
-                        "eth1": {
+                        "ovsbr1": {
                             type: "object",
                             additionalProperties: false,
                             properties: {
-                                "dhcp4": {
-                                    type: "boolean"
+                                "interfaces": {
+                                    type: "array",
+                                    items: {
+                                        type: "string",
+                                        enum: ["port2"],
+                                    }
                                 }
                             }
                         },
-                        "eth2": {
-                            type: "object",
-                            additionalProperties: false,
-                            properties: {
-                                "dhcp4": {
-                                    type: "boolean"
-                                }
-                            }
-                        }
                     },
-                    required: ["eth0", "eth1", "eth2"]
+                    required: ["ovsbr0", "ovsbr1"]
                 },
                 openvswitch: {
                     type: "object",
@@ -88,21 +87,19 @@ const openvswitch_schema = {
                         },
                         ports: {
                             type: "array",
+                            maxItems: 1,
+                            minItems: 1,
                             items: {
                                 type: "array",
-                                minItems: 2,
-                                maxItems: 2,
-                                items: {
-                                    type: "string",
-                                    faker: "lorem.word"
-                                },
+                                enum: [["port1", "port2"]]
                                 
                             }
                         }
                     },
+                    required: ["ports"]
                 },
             },
-            required: ["vrfs", "ethernets"]
+            required: ["bridges", "openvswitch"]
         }
     }
 }

@@ -138,7 +138,7 @@ const bridges_schema = {
                                     }
                                 },
                                 ...common.networkmanager_settings,
-                                ...common.openvswitch_bridge_extras
+                                //...common.openvswitch_bridge_extras
                             },
                         }
                     },
@@ -149,6 +149,5 @@ const bridges_schema = {
         }
     }
 }
-
 
 export default bridges_schema;

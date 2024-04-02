@@ -75,16 +75,8 @@ export const wireguard_schema = {
                                     enum: ["wireguard"]
                                 },
                                 key: {
-                                    anyOf: [
-                                        {
-                                            type: "string",
-                                            enum: ["rlbInAj0qV69CysWPQY7KEBnKxpYCpaWqOs/dLevdWc="]
-                                        },
-                                        {
-                                            type: "string",
-                                            faker: "system.filePath"
-                                        }
-                                    ]
+                                    type: "string",
+                                    enum: ["rlbInAj0qV69CysWPQY7KEBnKxpYCpaWqOs/dLevdWc="]
                                 },
                                 port: {
                                     type: "integer",
@@ -124,16 +116,8 @@ export const wireguard_schema = {
 
                                                     },
                                                     shared: {
-                                                        anyOf: [
-                                                            {
-                                                                type: "string",
-                                                                enum: ["rlbInAj0qV69CysWPQY7KEBnKxpYCpaWqOs/dLevdWc="]
-                                                            },
-                                                            {
-                                                                type: "string",
-                                                                faker: "system.filePath"
-                                                            }
-                                                        ]
+                                                        type: "string",
+                                                        enum: ["rlbInAj0qV69CysWPQY7KEBnKxpYCpaWqOs/dLevdWc="]
                                                     },
                                                 },
                                                 required: ["public"]
