@@ -1,4 +1,3 @@
-import jsf from "json-schema-faker";
 import writeYamlFile from 'write-yaml-file';
 import { JSONSchemaFaker } from "json-schema-faker";
 import { faker } from '@faker-js/faker';
@@ -16,6 +15,7 @@ import { wireguard_schema, sit_schema, vxlan_schema } from './tunnels.js';
 import modems_schema from './modems.js';
 import openvswitch_schema from './openvswitch.js'
 
+import { randomBytes } from "node:crypto";
 
 JSONSchemaFaker.extend('faker', () => {
     faker.ipv4 = {
@@ -151,61 +151,63 @@ function apply_fixes(object, object_type) {
     });
 }
 
-fs.mkdirSync("fakeroot/etc/netplan", { recursive: true });
+const destDir = "fakedata";
 
-const ethernets = jsf.generate(ethernets_schema);
+fs.mkdirSync(destDir, { recursive: true });
+
+const ethernets = JSONSchemaFaker.generate(ethernets_schema);
 apply_fixes(ethernets, "ethernets")
-writeYamlFile.sync('fakeroot/etc/netplan/ethernets.yaml', ethernets);
-fs.chmodSync('fakeroot/etc/netplan/ethernets.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, ethernets, {mode: 0o600});
 
-const wifis = jsf.generate(wifis_schema);
+const wifis = JSONSchemaFaker.generate(wifis_schema);
 apply_fixes(wifis, "wifis")
-writeYamlFile.sync('fakeroot/etc/netplan/wifis.yaml', wifis);
-fs.chmodSync('fakeroot/etc/netplan/wifis.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, wifis, {mode: 0o600});
 
-const vrfs = jsf.generate(vrfs_schema);
+const vrfs = JSONSchemaFaker.generate(vrfs_schema);
 apply_fixes(vrfs, "vrfs")
-writeYamlFile.sync('fakeroot/etc/netplan/vrfs.yaml', vrfs);
-fs.chmodSync('fakeroot/etc/netplan/vrfs.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, vrfs, {mode: 0o600});
 
-const vlans = jsf.generate(vlans_schema);
+const vlans = JSONSchemaFaker.generate(vlans_schema);
 apply_fixes(vlans, "vlans")
-writeYamlFile.sync('fakeroot/etc/netplan/vlans.yaml', vlans);
-fs.chmodSync('fakeroot/etc/netplan/vlans.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, vlans, {mode: 0o600});
 
-const bridges = jsf.generate(bridges_schema);
+const bridges = JSONSchemaFaker.generate(bridges_schema);
 apply_fixes(bridges, "bridges")
-writeYamlFile.sync('fakeroot/etc/netplan/bridges.yaml', bridges);
-fs.chmodSync('fakeroot/etc/netplan/bridges.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, bridges, {mode: 0o600});
 
-const bonds = jsf.generate(bonds_schema);
+const bonds = JSONSchemaFaker.generate(bonds_schema);
 apply_fixes(bonds, "bonds")
-writeYamlFile.sync('fakeroot/etc/netplan/bonds.yaml', bonds);
-fs.chmodSync('fakeroot/etc/netplan/bonds.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, bonds, {mode: 0o600});
 
-const wireguard = jsf.generate(wireguard_schema);
+const wireguard = JSONSchemaFaker.generate(wireguard_schema);
 apply_fixes(wireguard, "tunnels");
-writeYamlFile.sync('fakeroot/etc/netplan/wireguard.yaml', wireguard);
-fs.chmodSync('fakeroot/etc/netplan/wireguard.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, wireguard, {mode: 0o600});
 
-const sit = jsf.generate(sit_schema);
+const sit = JSONSchemaFaker.generate(sit_schema);
 apply_fixes(sit, "tunnels");
-writeYamlFile.sync('fakeroot/etc/netplan/sit.yaml', sit);
-fs.chmodSync('fakeroot/etc/netplan/sit.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, sit, {mode: 0o600});
 
-const vxlans = jsf.generate(vxlan_schema);
+const vxlans = JSONSchemaFaker.generate(vxlan_schema);
 apply_fixes(vxlans, "tunnels");
-writeYamlFile.sync('fakeroot/etc/netplan/vxlans.yaml', vxlans);
-fs.chmodSync('fakeroot/etc/netplan/vxlans.yaml', 0o600);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, vxlans, {mode: 0o600});
 
-const nmdevices = jsf.generate(nmdevices_schema);
-writeYamlFile.sync('fakeroot/etc/netplan/nmdevices.yaml', nmdevices);
-fs.chmodSync('fakeroot/etc/netplan/nmdevices.yaml', 0o600);
+const nmdevices = JSONSchemaFaker.generate(nmdevices_schema);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, nmdevices, {mode: 0o600});
 
-const modems = jsf.generate(modems_schema);
-writeYamlFile.sync('fakeroot/etc/netplan/modems.yaml', modems);
-fs.chmodSync('fakeroot/etc/netplan/modems.yaml', 0o600);
+const modems = JSONSchemaFaker.generate(modems_schema);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, modems, {mode: 0o600});
 
-const ovs = jsf.generate(openvswitch_schema);
-writeYamlFile.sync('fakeroot/etc/netplan/openvswitch.yaml', ovs);
-fs.chmodSync('fakeroot/etc/netplan/openvswitch.yaml', 0o600);
+const ovs = JSONSchemaFaker.generate(openvswitch_schema);
+var filename = randomBytes(32).toString('hex') + '.yaml';
+writeYamlFile.sync(`${destDir}/${filename}`, ovs, {mode: 0o600});
