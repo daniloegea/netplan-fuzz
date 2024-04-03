@@ -16,6 +16,8 @@ import modems_schema from './modems.js';
 import openvswitch_schema from './openvswitch.js'
 
 import { randomBytes } from "node:crypto";
+import dummy_devices_schema from './dummy-devices.js';
+import virtual_ethernets_schema from './virtual-ethernets.js';
 
 JSONSchemaFaker.extend('faker', () => {
     faker.ipv4 = {
@@ -151,63 +153,86 @@ function apply_fixes(object, object_type) {
     });
 }
 
-const destDir = "fakedata";
 
+function getRandomFilename() {
+    return randomBytes(32).toString('hex') + '.yaml';
+}
+
+function writeSchema(schema) {
+    var filename = getRandomFilename();
+    writeYamlFile.sync(`${destDir}/${filename}`, schema, {mode: 0o600});
+}
+
+function generateYAML(schema) {
+    return JSONSchemaFaker.generate(schema);
+}
+
+const destDir = "fakedata";
 fs.mkdirSync(destDir, { recursive: true });
 
-const ethernets = JSONSchemaFaker.generate(ethernets_schema);
-apply_fixes(ethernets, "ethernets")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, ethernets, {mode: 0o600});
+var numberOfFiles = 1;
 
-const wifis = JSONSchemaFaker.generate(wifis_schema);
-apply_fixes(wifis, "wifis")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, wifis, {mode: 0o600});
+if (process.argv.length == 3) {
+    numberOfFiles = parseInt(process.argv[2]);
+}
 
-const vrfs = JSONSchemaFaker.generate(vrfs_schema);
-apply_fixes(vrfs, "vrfs")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, vrfs, {mode: 0o600});
+while (numberOfFiles > 0) {
 
-const vlans = JSONSchemaFaker.generate(vlans_schema);
-apply_fixes(vlans, "vlans")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, vlans, {mode: 0o600});
+    numberOfFiles = numberOfFiles - 1;
 
-const bridges = JSONSchemaFaker.generate(bridges_schema);
-apply_fixes(bridges, "bridges")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, bridges, {mode: 0o600});
+    var schema = generateYAML(ethernets_schema);
+    apply_fixes(schema, "ethernets");
+    writeSchema(schema);
 
-const bonds = JSONSchemaFaker.generate(bonds_schema);
-apply_fixes(bonds, "bonds")
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, bonds, {mode: 0o600});
+    schema = generateYAML(wifis_schema);
+    apply_fixes(schema, "wifis");
+    writeSchema(schema);
 
-const wireguard = JSONSchemaFaker.generate(wireguard_schema);
-apply_fixes(wireguard, "tunnels");
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, wireguard, {mode: 0o600});
+    schema = generateYAML(vrfs_schema);
+    apply_fixes(schema, "vrfs");
+    writeSchema(schema);
 
-const sit = JSONSchemaFaker.generate(sit_schema);
-apply_fixes(sit, "tunnels");
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, sit, {mode: 0o600});
+    schema = generateYAML(vlans_schema);
+    apply_fixes(schema, "vlans");
+    writeSchema(schema);
 
-const vxlans = JSONSchemaFaker.generate(vxlan_schema);
-apply_fixes(vxlans, "tunnels");
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, vxlans, {mode: 0o600});
+    schema = generateYAML(bridges_schema);
+    apply_fixes(schema, "bridges");
+    writeSchema(schema);
 
-const nmdevices = JSONSchemaFaker.generate(nmdevices_schema);
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, nmdevices, {mode: 0o600});
+    schema = generateYAML(bonds_schema);
+    apply_fixes(schema, "bonds");
+    writeSchema(schema);
 
-const modems = JSONSchemaFaker.generate(modems_schema);
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, modems, {mode: 0o600});
+    schema = generateYAML(wireguard_schema);
+    apply_fixes(schema, "tunnels");
+    writeSchema(schema);
 
-const ovs = JSONSchemaFaker.generate(openvswitch_schema);
-var filename = randomBytes(32).toString('hex') + '.yaml';
-writeYamlFile.sync(`${destDir}/${filename}`, ovs, {mode: 0o600});
+    schema = generateYAML(sit_schema);
+    apply_fixes(schema, "tunnels");
+    writeSchema(schema);
+
+    schema = generateYAML(vxlan_schema);
+    apply_fixes(schema, "vxlans");
+    writeSchema(schema);
+
+    schema = generateYAML(nmdevices_schema);
+    apply_fixes(schema, "nmdevices");
+    writeSchema(schema);
+
+    schema = generateYAML(modems_schema);
+    apply_fixes(schema, "modems");
+    writeSchema(schema);
+
+    schema = generateYAML(openvswitch_schema);
+    apply_fixes(schema, "ovs");
+    writeSchema(schema);
+
+    schema = generateYAML(dummy_devices_schema);
+    apply_fixes(schema, "dummy-devices");
+    writeSchema(schema);
+
+    schema = generateYAML(virtual_ethernets_schema);
+    apply_fixes(schema, "virtual-ethernets");
+    writeSchema(schema);
+}
