@@ -1,5 +1,14 @@
 #!/bin/bash
 
+# This script will do these things in this order:
+# 1) build netplan
+# 2) build tools/keyfile_to_yaml from Netplan
+# 3) install node modules
+# 4) generate a number of random YAMLs
+# 5) call netplan generate for each one of them separately
+# 6) if the result has NetworkManager files, try to load them with the keyfile_to_yaml tool
+# 7) call netplan generate again for the YAMLs created by the keyfile_to_yaml tool
+
 NETPLANPATH=$1
 NUMBER_OF_YAMLS_PER_TYPE=$2
 
