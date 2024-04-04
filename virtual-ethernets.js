@@ -6,7 +6,7 @@ const common_veth_properties = {
     },
     macaddress: {
         type: "string",
-        faker: "internet.mac"
+        faker: "macaddress.mac"
     },
     "ipv6-privacy": {
         type: "boolean"
@@ -43,6 +43,7 @@ const virtual_ethernets_schema = {
                 },
                 "virtual-ethernets": {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

@@ -53,6 +53,7 @@ const bridges_schema = {
                 },
                 bridges: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",
@@ -138,7 +139,7 @@ const bridges_schema = {
                                     }
                                 },
                                 ...common.networkmanager_settings,
-                                //...common.openvswitch_bridge_extras
+                                ...common.openvswitch_bridge_extras
                             },
                         }
                     },

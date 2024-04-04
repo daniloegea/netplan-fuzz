@@ -19,6 +19,7 @@ const wifis_schema = {
                 },
                 wifis: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",
@@ -30,7 +31,6 @@ const wifis_schema = {
                             additionalProperties: false,
                             properties: {
                                 ...common.common_properties,
-                                /*
                                 "match": {
                                     type: "object",
                                     additionalProperties: false,
@@ -49,11 +49,9 @@ const wifis_schema = {
                                         }
                                     },
                                 },
-                                /*
                                 "set-name": {
                                     type: "string",
                                 },
-                                */
                                 optional: {
                                     type: "boolean"
                                 },
@@ -83,14 +81,12 @@ const wifis_schema = {
                                 },
                                 macaddress: {
                                     type: "string",
-                                    faker: "internet.mac"
+                                    faker: "macaddress.mac"
                                 },
-                                /*
                                 "ipv6-mtu": {
                                     type: "integer",
                                     minimum: 0
                                 },
-                                */
                                 "ipv6-privacy": {
                                     type: "boolean"
                                 },
@@ -107,6 +103,7 @@ const wifis_schema = {
                                 },
                                 "access-points": {
                                     type: "object",
+                                    ...common.minMaxProperties,
                                     patternProperties: {
                                         "[azAZ09 ]+": {
                                             type: "object",

@@ -20,6 +20,12 @@ import dummy_devices_schema from './dummy-devices.js';
 import virtual_ethernets_schema from './virtual-ethernets.js';
 
 JSONSchemaFaker.extend('faker', () => {
+    faker.macaddress = {
+        mac: _ => {
+            var items = [faker.internet.mac(), "permanent", "random", "stable", "preserve"];
+            return items[Math.floor(Math.random() * 1000) % 4];
+        }
+    },
     faker.ipv4 = {
         withprefix: _ => {
             return faker.internet.ipv4() + '/24';

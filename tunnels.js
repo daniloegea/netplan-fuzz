@@ -53,6 +53,7 @@ export const wireguard_schema = {
                 },
                 tunnels: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

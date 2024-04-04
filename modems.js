@@ -19,6 +19,7 @@ const modems_schema = {
                 },
                 modems: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

@@ -19,6 +19,7 @@ const dummy_devices_schema = {
                 },
                 "dummy-devices": {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",
@@ -35,14 +36,12 @@ const dummy_devices_schema = {
                                 },
                                 macaddress: {
                                     type: "string",
-                                    faker: "internet.mac"
+                                    faker: "macaddress.mac"
                                 },
-                                /*
                                 "ipv6-mtu": {
                                     type: "integer",
                                     minimum: 0
                                 },
-                                */
                                 "ipv6-privacy": {
                                     type: "boolean"
                                 },

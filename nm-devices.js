@@ -1,4 +1,4 @@
-import common_properties from "./common.js";
+import common_properties, { minMaxProperties } from "./common.js";
 
 const nmdevices_schema = {
     type: "object",
@@ -19,6 +19,7 @@ const nmdevices_schema = {
                 },
                 "nm-devices": {
                     type: "object",
+                    ...minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

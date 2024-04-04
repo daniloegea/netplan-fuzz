@@ -53,6 +53,7 @@ const vlans_schema = {
                 },
                 vlans: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

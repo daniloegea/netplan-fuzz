@@ -19,6 +19,7 @@ const ethernets_schema = {
                 },
                 ethernets: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",
@@ -38,23 +39,19 @@ const ethernets_schema = {
                                             type: "string",
                                             faker: "lorem.word"
                                         },
-                                        /*
                                         driver: {
                                             type: "string",
                                             faker: "lorem.word"
                                         },
-                                        */
                                         macaddress: {
                                             type: "string",
                                             faker: "internet.mac"
                                         }
                                     },
                                 },
-                                /*
                                 "set-name": {
                                     type: "string"
                                 },
-                                */
                                 optional: {
                                     type: "boolean"
                                 },
@@ -87,14 +84,12 @@ const ethernets_schema = {
                                 },
                                 macaddress: {
                                     type: "string",
-                                    faker: "internet.mac"
+                                    faker: "macaddress.mac"
                                 },
-                                /*
                                 "ipv6-mtu": {
                                     type: "integer",
                                     minimum: 0
                                 },
-                                */
                                 "ipv6-privacy": {
                                     type: "boolean"
                                 },

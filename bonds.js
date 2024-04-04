@@ -47,12 +47,49 @@ const bonds_schema = {
                                     type: "boolean"
                                 }
                             }
-                        }
+                        },
+                        "eth13": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
+                        "eth14": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
+                        "eth15": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
+                        "eth16": {
+                            type: "object",
+                            additionalProperties: false,
+                            properties: {
+                                "dhcp4": {
+                                    type: "boolean"
+                                }
+                            }
+                        },
                     },
-                    required: ["eth10", "eth11", "eth12"]
+                    required: ["eth10", "eth11", "eth12", "eth13", "eth14", "eth15", "eth16"]
                 },
                 bonds: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",

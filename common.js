@@ -1,3 +1,8 @@
+export const minMaxProperties = {
+    minProperties: 3,
+    maxProperties: 10,
+};
+
 export const routes = {
     routes: {
         type: "array",
@@ -109,7 +114,6 @@ export const common_properties = {
     "accept-ra": {
         type: "boolean"
     },
-    /*
     gateway4: {
         type: "string",
         faker: "internet.ipv4"
@@ -118,7 +122,6 @@ export const common_properties = {
         type: "string",
         faker: "internet.ipv6"
     },
-    */
     addresses: {
         type: "array",
         items: {

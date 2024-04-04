@@ -53,6 +53,7 @@ const vrfs_schema = {
                 },
                 vrfs: {
                     type: "object",
+                    ...common.minMaxProperties,
                     properties: {
                         renderer: {
                             type: "string",
